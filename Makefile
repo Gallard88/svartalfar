@@ -11,9 +11,9 @@ LD=arm-none-eabi-ld
 SIZE=arm-none-eabi-size
 RM = rm -rf
 
-CFLAGS = -mfloat-abi=softfp
-CFLAGS += -mfpu=fpv4-sp-d16
-CFLAGS += -fpic -Wall
+CFLAGS = #-mfloat-abi=softfp
+CFLAGS += #-mfpu=fpv4-sp-d16
+CFLAGS += -fpic -Wall -mcpu=cortex-m3 -mthumb
 CFLAGS += -pedantic -std=iso9899:1999
 #CFLAGS += -Wshadow -Wpointer-arith -Wcast-qual 
 #CFLAGS += -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wconversion
