@@ -13,8 +13,8 @@ clean:
 test: utest
 	./utest
 
-UTest: unity.o main.o unity_fixture.o Dataflash.o testDataflash.o EEPROM.o testEEPROM.o ErrorChecking.o testErrorCheck.o Timing.o  testTiming.o testLogging.o Logging.o Clock.o testClock.o Syslog.o testSyslog.o CmdProcessor.o testCmdProcessor.o
-	gcc -o utest main.o unity.o unity_fixture.o Dataflash.o testDataflash.o EEPROM.o testEEPROM.o ErrorChecking.o testErrorCheck.o Timing.o testTiming.o Logging.o testLogging.o  Clock.o testClock.o Syslog.o testSyslog.o CmdProcessor.o testCmdProcessor.o
+UTest: unity.o main.o unity_fixture.o Dataflash.o testDataflash.o EEPROM.o testEEPROM.o ErrorChecking.o testErrorCheck.o Timing.o  testTiming.o testLogging.o Logging.o Clock.o testClock.o Syslog.o testSyslog.o CmdProcessor.o testCmdProcessor.o ModuleMonitor.o testModMon.o
+	gcc -o utest main.o unity.o unity_fixture.o Dataflash.o testDataflash.o EEPROM.o testEEPROM.o ErrorChecking.o testErrorCheck.o Timing.o testTiming.o Logging.o testLogging.o  Clock.o testClock.o Syslog.o testSyslog.o CmdProcessor.o testCmdProcessor.o ModuleMonitor.o testModMon.o
 
 unity.o: unity.c 
 	gcc $(CFLAGS) -c unity.c 
@@ -60,6 +60,13 @@ testLogging.o: testLogging.c Logging.o
 
 Logging.o: ../Logging.c ../Logging.h
 	gcc $(CFLAGS) -c ../Logging.c
+
+ModuleMonitor.o: ../ModuleMonitor.h ../ModuleMonitor.c
+	gcc $(CFLAGS) -c ../ModuleMonitor.c
+
+testModMon.o: ModuleMonitor.o testModMon.c
+	gcc $(CFLAGS) -c testModMon.c
+
 
 testSyslog.o: testSyslog.c Syslog.o
 	gcc $(CFLAGS) -c testSyslog.c

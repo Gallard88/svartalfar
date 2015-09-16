@@ -10,6 +10,7 @@ static void RunAllTests(void)
   RUN_TEST_GROUP(Dataflash);
   RUN_TEST_GROUP(EEPROM);
   RUN_TEST_GROUP(ErrorCheck);
+  RUN_TEST_GROUP(ModMon);
   RUN_TEST_GROUP(Logging);
   RUN_TEST_GROUP(Timing);
   RUN_TEST_GROUP(Syslog);

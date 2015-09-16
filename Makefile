@@ -39,6 +39,7 @@ SRCS_C =           \
   EEPROM.c         \
   ErrorChecking.c  \
   Logging.c        \
+  ModuleMonitor.c  \
   Syslog.c         \
   Timing.c 
 
