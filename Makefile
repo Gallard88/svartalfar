@@ -33,6 +33,7 @@ CFLAGS += -I.
 SRCS_S = \
 
 SRCS_C =           \
+  BulkStorage.c    \
   Clock.c          \
   CmdProcessor.c   \
   Dataflash.c      \

@@ -5,6 +5,7 @@
 
 static void RunAllTests(void)
 {
+  RUN_TEST_GROUP(TestBulkStorage);
   RUN_TEST_GROUP(Clock);
   RUN_TEST_GROUP(CmdProcessor);
   RUN_TEST_GROUP(Dataflash);
