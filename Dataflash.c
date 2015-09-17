@@ -1,4 +1,6 @@
 
+#include <stdio.h>
+
 #include "Dataflash.h"
 
 /* defines for all opcodes    */
@@ -86,16 +88,19 @@ uint16_t DataFlash_CheckToken(const DFToken_t *token, uint16_t page)
 }
 
 /* ======================================= */
-void DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t *dest)
+DF_Return_t DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t *dest)
 {	/* Main Memory Page Read (does not use either buffer)
 	 * 24 address bits, 4 don't care bytes
 	 * address = 13 bits page, 10bits byte
 	 * 0ppp pppp pppp ppbb bbbb bbbb
    */
+  if ( token == NULL ) {
+    return DF_NoToken;
+  }    
 
 	page = DataFlash_CheckToken(token, page);
 	if ( page == 0xFFFF ) {
-		return;
+		return DF_BadPage;
 	}
 
 	Dataflash_SPI.CsOn();
@@ -113,19 +118,23 @@ void DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, 
 	Dataflash_SPI.ReadWrite( dest, size);
 
 	Dataflash_SPI.CsOff();
+  return DF_Good;
 }
 
 /* ======================================= */
-void DataFlash_ReadFlashToBuffer(const DFToken_t *token, uint16_t page, uint8_t whichbuf)
+DF_Return_t DataFlash_ReadFlashToBuffer(const DFToken_t *token, uint16_t page, uint8_t whichbuf)
 {	/* do a Main Memory Page Read to Buffer
 	 * 24 address bits, 32 don't care bits
 	 * address = 1bits 0, 13bits page, 10bits 0
 	 * 0ppp pppp pppp pp00 0000 0000
    */
+  if ( token == NULL ) {
+    return DF_NoToken;
+  }    
 
 	page = DataFlash_CheckToken(token, page);
 	if ( page == 0xFFFF ) {
-		return;
+		return DF_BadPage;
 	}
 
 	Dataflash_SPI.CsOn();			// delay 250ns minimum till SCK (1.8T)
@@ -134,18 +143,22 @@ void DataFlash_ReadFlashToBuffer(const DFToken_t *token, uint16_t page, uint8_t 
 	Dataflash_SPI.Write((page<<2)+0);
 	Dataflash_SPI.Write(0);
 	Dataflash_SPI.CsOff();
+  return DF_Good;
 }
 
-void DataFlash_WriteBufferToFlash(const DFToken_t *token, uint16_t page, uint8_t whichbuf)
+DF_Return_t DataFlash_WriteBufferToFlash(const DFToken_t *token, uint16_t page, uint8_t whichbuf)
 {	/* do a Buffer to Main Memory Page Write with auto-erase
 	 * 24 address bits, 32 don't care bits
 	 * address = 2bits 0, 13bits page, 10bits 0
 	 * 0ppp pppp pppp pp00 0000 0000
    */
+  if ( token == NULL ) {
+    return DF_NoToken;
+  }    
 
 	page = DataFlash_CheckToken(token, page);
 	if ( page == 0xFFFF ) {
-		return;
+		return DF_BadPage;
 	}
 
 	Dataflash_SPI.CsOn();
@@ -155,18 +168,25 @@ void DataFlash_WriteBufferToFlash(const DFToken_t *token, uint16_t page, uint8_t
 	Dataflash_SPI.Write((page<<2)+0);
 	Dataflash_SPI.Write(0);
 	Dataflash_SPI.CsOff();
+  return DF_Good;
 }
 
 /* ======================================= */
-void DataFlash_BufferRead (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *dest)
+DF_Return_t DataFlash_BufferRead (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *dest)
 {	/* start a Read from Buffer
 	 * 24 address bits, 8 don't care bits
 	 * address = 14 bits 0, 10bits byte
 	 * 0000 0000 0000 00bb bbbb bbbb
    */
+  if ( token == NULL ) {
+    return DF_NoToken;
+  }    
+  if ( dest == NULL ) {
+    return DF_NoBuffer;
+  }    
 	page = DataFlash_CheckToken(token, page);
 	if ( page == 0xFFFF ) {
-		return;
+		return DF_BadPage;
 	}
 
 	Dataflash_SPI.CsOn();
@@ -177,17 +197,24 @@ void DataFlash_BufferRead (const DFToken_t *token, uint16_t page, uint16_t offse
 	Dataflash_SPI.Write(0);
 	Dataflash_SPI.ReadWrite( dest, size);
 	Dataflash_SPI.CsOff();
+  return DF_Good;
 }
 
-void DataFlash_BufferWrite (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *src)
+DF_Return_t DataFlash_BufferWrite (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *src)
 {	/* do a Write to Buffer
    * 24 address bits, 8 don't care bits
    * address = 14 bits 0, 10 bits byte
    * 0000 0000 0000 00bb bbbb bbbb
    */
+  if ( token == NULL ) {
+    return DF_NoToken;
+  }    
+  if ( src == NULL ) {
+    return DF_NoBuffer;
+  }    
 	page = DataFlash_CheckToken(token, page);
 	if ( page == 0xFFFF ) {
-		return;
+		return DF_BadPage;
 	}
 
 	Dataflash_SPI.CsOn();
@@ -197,6 +224,7 @@ void DataFlash_BufferWrite (const DFToken_t *token, uint16_t page, uint16_t offs
 	Dataflash_SPI.Write((uint8_t)offset);
 	Dataflash_SPI.ReadWrite( src, size);
 	Dataflash_SPI.CsOff();
+  return DF_Good;
 }
 
 /* ======================================= */

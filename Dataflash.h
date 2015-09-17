@@ -16,6 +16,15 @@ extern "C" {
  */
 extern const SPI_Driver_t Dataflash_SPI;
 
+typedef enum {
+  DF_NoBuffer,
+  DF_NoToken,
+	DF_BadPage,
+  DF_BadOffset,
+  DF_BadSize,
+  DF_Good
+} DF_Return_t;
+
 /**************
  *  DFToken_t
  *  This controls access to the data flash. 
@@ -71,7 +80,7 @@ DataFlash_Chip_t DataFlash_ReadChipType(void);
  *  DataFlash_PageRead()
  *  Used to bypass the buffer system and read directly from the chip.
  */
-void DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t *dest);
+DF_Return_t DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t *dest);
 
 /**************
  *  DataFlash_ReadFlashToBuffer()
@@ -79,16 +88,16 @@ void DataFlash_PageRead(const DFToken_t *token, uint16_t page, uint16_t offset, 
  *  Used to move data to/from the flash memory into it's internal buffer.
  *  Note: buffer writes can takes up to 20ms to complete.
  */
-void DataFlash_ReadFlashToBuffer(const DFToken_t *token, uint16_t page, uint8_t whichbuf);
-void DataFlash_WriteBufferToFlash(const DFToken_t *token, uint16_t page, uint8_t whichbuf);
+DF_Return_t DataFlash_ReadFlashToBuffer(const DFToken_t *token, uint16_t page, uint8_t whichbuf);
+DF_Return_t DataFlash_WriteBufferToFlash(const DFToken_t *token, uint16_t page, uint8_t whichbuf);
 
 /**************
  *  DataFlash_BufferRead()
  *  DataFlash_BufferWrite()
  *  Read/Write to data flash IC's internal memory buffers.
  */
-void DataFlash_BufferRead (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *dest);
-void DataFlash_BufferWrite (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *src);
+DF_Return_t DataFlash_BufferRead (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *dest);
+DF_Return_t DataFlash_BufferWrite (const DFToken_t *token, uint16_t page, uint16_t offset, uint16_t size, uint8_t whichbuf, uint8_t *src);
 
 #ifdef __cplusplus
 }
